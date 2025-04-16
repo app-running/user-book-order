@@ -27,6 +27,44 @@ All REST API :
 | Get all return books with pagination            | GET    | "/list/return-book?page=1&perPage=10"               |
 
 
+API Endpoints 
+✅ Add User
+```
+POST "/user/create"
+```
+Request Body:
+```
+{
+  "name": "user 1"
+}
 
-   
+```
+Response Body:
+```
+{
+  "id": 1,
+  "name": "user {{$randomCity}}"
+}
 
+```
+✅ Add BooK
+```
+POST "/book/addBook"
+```
+Request Body:
+```
+{
+  "title": "book 1",
+  "quantity": 2
+}
+
+```
+Response Body:
+```
+{
+  "id": 1,
+  "title": "book 1",
+  "quantity": 2
+}
+
+```
