@@ -19,7 +19,7 @@ Book:
    
 UserBookOrder:
 1. Borrow book by User                             : POST "/borrow-book"
-2. Retuen book by User                             : POST "/return-book"
+2. Return book by User                             : POST "/return-book"
 3. Get all borrow books by User Id with pagination : GET "/list/borrow-book?user={userId}&page=1&perPage=10"
 4. Get all return books by User Id with pagination : GET "/list/return-book?user={userId}&page=1&perPage=10"
 5. Get all borrow books with pagination            : GET "/list/borrow-book?page=1&perPage=10"
