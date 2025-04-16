@@ -16,8 +16,8 @@ All REST API :
 | **User API**                                    | :---   | :---                                                |
 | Create User                                     | POST   |  "/user/create"                                     |
 | **Book API**                                    | :---   | :---                                                |
-| Get All Book                                    | POST   |  "/book"                                            |
-| Create Book                                     | GET    |  "/book/addBook"                                    |
+| Get All Book                                    | GET    |  "/book"                                            |
+| Create Book                                     | POST   |  "/book/addBook"                                    |
 | **UserBookOrder API**                           | :---   | :---                                                |
 | Borrow book by User                             | POST   | "/borrow-book"                                      |
 | Return book by User                             | POST   | "/return-book"                                      |
