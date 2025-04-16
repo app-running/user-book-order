@@ -20,7 +20,7 @@ All REST API :
 | Create Book                                     | GET    |  "/book/addBook"                                    |
 | UserBookOrder API                               | :---   | :---                                                |
 | Borrow book by User                             | POST   | "/borrow-book"                                      |
-| Return book by User                             | POST   | "/borrow-book"                                      |
+| Return book by User                             | POST   | "/return-book"                                      |
 | Get all borrow books by User Id with pagination | GET    | "/list/borrow-book?user={userId}&page=1&perPage=10" |
 | Get all return books by User Id with pagination | GET    | "/list/return-book?user={userId}&page=1&perPage=10" |
 | Get all borrow books with pagination            | GET    | "/list/borrow-book?page=1&perPage=10"               |
