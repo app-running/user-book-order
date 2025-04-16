@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: book-order-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/book-order
+    username: postgres
+    password: free
+    driver-class-name: org.postgresql.Driver
+    jpa:
+      hibernate:
+        ddl-auto: update
+      show-sql: true
+      properties:
+        hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+  liquibase:
+    change-log: classpath:db/changelog/changelog-master.xml
+server:
+  compression:
+    enabled: true
+    excluded-user-agents:
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
+    min-response-size: 1024
+  servlet:
+    context-path: /book-order-service
+  port: ${HTTP_PORT:8080}
+  shutdown: graceful
+
+
+
