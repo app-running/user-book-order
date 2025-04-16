@@ -5,24 +5,36 @@ import com.book.order.entity.Book;
 import com.book.order.entity.User;
 import com.book.order.entity.UsersBookOrder;
 import com.book.order.enumeration.StatusType;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 
+import java.util.List;
+
 public final class Utils {
 
-     private final static ObjectMapper MAPPER = new ObjectMapper();
+    private final static ObjectMapper mapper = new ObjectMapper();
 
     @SneakyThrows
     public static String convertToSting(final Object o) {
 
-        return MAPPER.writeValueAsString(o);
+        return mapper.writeValueAsString(o);
     }
 
 
     @SneakyThrows
     public static <T> T convertToObject(final String json, Class<T> clazz) {
-        return MAPPER.readValue(json, clazz);
+        return mapper.readValue(json, clazz);
     }
+
+    @SneakyThrows
+    public static <T> List<T>  convertToPageResponseContent(String json, Class<T> clazz){
+        JavaType type = mapper.getTypeFactory()
+                .constructParametricType(PageResponse.class, clazz);
+        PageResponse<T> page = mapper.readValue(json, type);
+        return page.getContent();
+    }
+
 
     public static final UserRequest USER_REQUEST = UserRequest
             .builder()

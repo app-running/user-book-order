@@ -4,7 +4,7 @@ import com.book.order.converter.UserConvert;
 import com.book.order.dto.UserRequest;
 import com.book.order.dto.UserResponse;
 import com.book.order.entity.User;
-import com.book.order.exception.BookOrderException;
+import com.book.order.exception.UserBookOrderException;
 import com.book.order.repository.UserRepository;
 import com.book.order.service.UsersService;
 import lombok.AllArgsConstructor;
@@ -14,7 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import static com.book.order.exception.BookOrderException.customMessage;
+import static com.book.order.exception.UserBookOrderException.customMessage;
 
 
 @Service
@@ -46,7 +46,7 @@ public class UserServiceImpl implements UsersService {
     @Override
     public User findById(Long userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new BookOrderException(customMessage(HttpStatus.NOT_FOUND,
+                .orElseThrow(() -> new UserBookOrderException(customMessage(HttpStatus.NOT_FOUND,
                         String.format("User id : %s not found", userId)
                 )));
     }

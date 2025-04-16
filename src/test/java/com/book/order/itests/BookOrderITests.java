@@ -1,15 +1,13 @@
 package com.book.order.itests;
 
-import com.book.order.dto.UserBookOrderRequest;
-import com.book.order.dto.UserBookOrderResponse;
-import com.book.order.dto.BookResponse;
-import com.book.order.dto.UserResponse;
+import com.book.order.dto.*;
 import com.book.order.entity.*;
 import com.book.order.repository.*;
 import com.book.order.utils.Path;
 import com.book.order.converter.BookConvert;
 import com.book.order.enumeration.StatusType;
 import com.book.order.exception.ErrorResponse;
+import com.book.order.utils.Utils;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,8 +22,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -78,21 +74,21 @@ public class BookOrderITests {
     }
 
     @Test
-    void testSuccessBorrowBook(){
+    void test_Successful_Borrow_Book() throws Exception{
 
-        var books = getEntityList(Path.BOOK_PATH, BookResponse[].class);
-        var users = getEntityList(Path.USER_PATH, UserResponse[].class);
+        final var books = fetchList(Path.BOOK_PATH, BookResponse.class);
+        final var users = fetchList(Path.USER_PATH, UserResponse.class);
 
-        var userId = users.getFirst().getId();
-        var bookId = books.getFirst().getId();
+        final var userId = users.getFirst().getId();
+        final var bookId = books.getFirst().getId();
 
-       var bookOrderRequest =
+        final var bookOrderRequest =
                UserBookOrderRequest.builder()
                        .userId(userId)
                        .bookId(bookId)
                        .build();
 
-        final UserBookOrderResponse bookOrderResponse = bookOrder(Path.BORROW_BOOK_PATH, bookOrderRequest);
+        final UserBookOrderResponse bookOrderResponse = userBookOrder(Path.BORROW_BOOK_PATH, bookOrderRequest);
 
         assertEquals(bookId, bookOrderResponse.getBookId());
         assertEquals(userId, bookOrderResponse.getUserId());
@@ -100,10 +96,10 @@ public class BookOrderITests {
     }
 
     @Test
-    void testSuccessReturnBook(){
+    void test_Successful_Return_Book() throws Exception{
 
-        var books = getEntityList(Path.BOOK_PATH, BookResponse[].class);
-        var users = getEntityList(Path.USER_PATH, UserResponse[].class);
+        var books = fetchList(Path.BOOK_PATH, BookResponse.class);
+        var users = fetchList(Path.USER_PATH, UserResponse.class);
 
         var userId = users.getFirst().getId();
         var bookId = books.getFirst().getId();
@@ -114,18 +110,18 @@ public class BookOrderITests {
                         .bookId(bookId)
                         .build();
 
-        final UserBookOrderResponse bookOrderBorrow = bookOrder(Path.BORROW_BOOK_PATH, bookOrderRequest);
+        final UserBookOrderResponse bookOrderBorrow = userBookOrder(Path.BORROW_BOOK_PATH, bookOrderRequest);
         assertEquals(StatusType.BORROW, bookOrderBorrow.getStatusType());
 
-        final UserBookOrderResponse bookOrderReturn = bookOrder(Path.RETURN_BOOK_PATH, bookOrderRequest);
+        final UserBookOrderResponse bookOrderReturn = userBookOrder(Path.RETURN_BOOK_PATH, bookOrderRequest);
         assertEquals(StatusType.RETURN, bookOrderReturn.getStatusType());
     }
 
     @Test
-    void testFailBorrowByUserTheSameBookTwice(){
+    void test_Fail_Borrow_Book_Twice() throws Exception{
 
-        var books = getEntityList(Path.BOOK_PATH, BookResponse[].class);
-        var users = getEntityList(Path.USER_PATH, UserResponse[].class);
+        var books = fetchList(Path.BOOK_PATH, BookResponse.class);
+        var users = fetchList(Path.USER_PATH, UserResponse.class);
 
         var userId = users.getFirst().getId();
         var bookId = books.getFirst().getId();
@@ -136,7 +132,7 @@ public class BookOrderITests {
                         .bookId(bookId)
                         .build();
 
-        final UserBookOrderResponse bookOrderBorrow = bookOrder(Path.BORROW_BOOK_PATH, bookOrderRequest);
+        final UserBookOrderResponse bookOrderBorrow = userBookOrder(Path.BORROW_BOOK_PATH, bookOrderRequest);
         assertEquals(StatusType.BORROW, bookOrderBorrow.getStatusType());
 
         final ResponseEntity<ErrorResponse> exchange = restTemplate
@@ -151,15 +147,15 @@ public class BookOrderITests {
 
     @SneakyThrows
     @Test
-    void testTwoUserConcurrentBorrowOneBook(){
+    void test_Successful_Two_Users_Concurrent_Borrow_Book(){
 
-        var books = getEntityList(Path.BOOK_PATH, BookResponse[].class);
-        var users = getEntityList(Path.USER_PATH, UserResponse[].class);
+        var books = fetchList(Path.BOOK_PATH, BookResponse.class);
+        var users = fetchList(Path.USER_PATH, UserResponse.class);
 
         ExecutorService executor = Executors.newFixedThreadPool(2);
         CountDownLatch latch = new CountDownLatch(2);
 
-        users.forEach(user ->{
+        users.forEach(user -> {
             Runnable task = createTask( user.getId(), books.getFirst().getId(), latch);
             executor.submit(task);
 
@@ -172,14 +168,13 @@ public class BookOrderITests {
         Assertions.assertEquals(listBorrowBook.size(), 1);
     }
 
-    private UserBookOrderResponse bookOrder(String uri, UserBookOrderRequest bookOrderRequest){
+    private UserBookOrderResponse userBookOrder(String uri, UserBookOrderRequest bookOrderRequest){
         return  restTemplate.postForObject(uri, bookOrderRequest, UserBookOrderResponse.class);
     }
 
-
-    private <T> List<T> getEntityList(String path, Class<T[]> aClass) {
-        T[] array = restTemplate.getForObject(path, aClass);
-        return array != null ? Arrays.asList(array) : Collections.emptyList();
+    private <T> List<T> fetchList(String url, Class<T> clazz) throws Exception {
+        String json = restTemplate.getForObject(url, String.class);
+        return Utils.convertToPageResponseContent(json, clazz);
     }
 
     private  Runnable createTask(Long userId, Long bookId,  CountDownLatch latch) {
@@ -187,7 +182,7 @@ public class BookOrderITests {
 
         return () -> {
             try {
-                bookOrder(Path.BORROW_BOOK_PATH, bookOrderRequest); // each Runnable uses its own userId
+                userBookOrder(Path.BORROW_BOOK_PATH, bookOrderRequest); // each Runnable uses its own userId
             } finally {
                 latch.countDown();
             }

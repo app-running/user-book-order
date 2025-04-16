@@ -5,10 +5,9 @@ import com.book.order.dto.BookRequest;
 import com.book.order.dto.BookResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/book")
@@ -18,9 +17,9 @@ public class BookController {
     private final BookService bookService;
 
     @GetMapping
-    public ResponseEntity<List<BookResponse>> getBooks( @RequestParam(defaultValue = "0") int page,
-                                                        @RequestParam(defaultValue = "100", name = "perPage") int perPage){
-        return  ResponseEntity.ok(bookService.getBooks(page, perPage).getContent());
+    public ResponseEntity<Page<BookResponse>> getBooks(@RequestParam(defaultValue = "0") int page,
+                                                       @RequestParam(defaultValue = "100", name = "perPage") int perPage){
+        return  ResponseEntity.ok(bookService.getBooks(page, perPage));
     }
 
     @PostMapping("/addBook")

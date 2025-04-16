@@ -8,10 +8,10 @@ import com.book.order.utils.SerializationService;
 import com.book.order.utils.Utils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+
 import static com.book.order.utils.Path.*;
 import static com.book.order.utils.Utils.*;
 import static org.mockito.Mockito.when;
@@ -28,7 +29,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 public class UserBookOrderControllerTest {
 
     private MockMvc mockMvc;
@@ -55,7 +57,7 @@ public class UserBookOrderControllerTest {
     }
 
     @Test
-    void testSuccessfulBorrowBookByUser() throws Exception{
+    void test_successful_borrow_book() throws Exception{
 
         when(userBookOrderService.orderBorrowBook(BOOK_ORDER_REQUEST)).thenReturn(USER_BOOK_ORDER_RESPONSE);
         this.mockMvc.perform(post(BORROW_BOOK_PATH)
@@ -67,7 +69,7 @@ public class UserBookOrderControllerTest {
     }
 
     @Test
-    void testSuccessfulReturnBookByUser() throws Exception{
+    void test_successful_return_book() throws Exception{
 
         when(userBookOrderService.orderReturnBook(BOOK_ORDER_REQUEST)).thenReturn(USER_BOOK_ORDER_RESPONSE);
         this.mockMvc.perform(post(RETURN_BOOK_PATH)
@@ -79,7 +81,7 @@ public class UserBookOrderControllerTest {
     }
 
     @Test
-    void testSuccessfulReturnBorrowBookByUserId() throws Exception{
+    void test_successful_list_of_borrowed_books_by_user() throws Exception{
 
         var page = 0;
         var perPage = 100;
@@ -96,12 +98,12 @@ public class UserBookOrderControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(Utils.convertToSting(BOOK_ORDER_REQUEST)))
                 .andExpect(status().isOk())
-                .andExpect(content().string(Utils.convertToSting(userBookList)))
+                .andExpect(content().string(Utils.convertToSting(userBookOrderResponse)))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 
     @Test
-    void testSuccessfulReturnBorrowBooks() throws Exception{
+    void test_successful_list_of_borrow_books() throws Exception{
 
         var page = 0;
         var perPage = 100;
@@ -116,7 +118,7 @@ public class UserBookOrderControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(Utils.convertToSting(BOOK_ORDER_REQUEST)))
                 .andExpect(status().isOk())
-                .andExpect(content().string(Utils.convertToSting(userBookList)))
+                .andExpect(content().string(Utils.convertToSting(userBookOrderResponse)))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 }

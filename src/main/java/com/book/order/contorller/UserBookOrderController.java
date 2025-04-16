@@ -5,10 +5,10 @@ import com.book.order.dto.UserBookOrderResponse;
 import com.book.order.service.UserBookOrderService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @AllArgsConstructor
@@ -17,23 +17,23 @@ public class UserBookOrderController {
     private final UserBookOrderService bookOrderService;
 
     @GetMapping("/list/borrow-book")
-    public ResponseEntity<List<UserBookOrderResponse>> getBorrowBooks(
+    public ResponseEntity<Page<UserBookOrderResponse>> getBorrowBooks(
          @RequestParam(required = false) Long user,
          @RequestParam(defaultValue = "0") int page,
          @RequestParam(defaultValue = "100", name = "perPage") int perPage) {
 
-        var response = bookOrderService.userBorrowBookOrderList(user, page, perPage).getContent();
+        var response = bookOrderService.userBorrowBookOrderList(user, page, perPage);
 
         return  ResponseEntity.ok(response);
     }
 
     @GetMapping("/list/return-book")
-    public ResponseEntity<List<UserBookOrderResponse>> getReturnBookList(
+    public ResponseEntity<Page<UserBookOrderResponse>> getReturnBookList(
             @RequestParam(required = false) Long user,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "100", name = "perPage") int perPage){
 
-        var response = bookOrderService.userReturnBookOrderList(user, page, perPage).getContent();
+        var response = bookOrderService.userReturnBookOrderList(user, page, perPage);
 
         return  ResponseEntity.ok(response);
     }

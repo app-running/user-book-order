@@ -6,9 +6,9 @@ import com.book.order.dto.BookResponse;
 import com.book.order.service.BookService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -25,7 +25,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 public class BookControllerTest {
 
 
@@ -47,7 +48,7 @@ public class BookControllerTest {
     }
 
     @Test
-    void testSuccessfulAddNewBook() throws Exception {
+    void test_successful_add_new_book() throws Exception {
 
         when(bookServiceș.addBook(BOOK_REQUEST)).thenReturn(BOOK_RESPONSE);
         this.mockMvc.perform(post("/book/addBook")
@@ -59,7 +60,7 @@ public class BookControllerTest {
     }
 
     @Test
-    void testSuccessfulGetBooks() throws Exception {
+    void test_successful_get_books() throws Exception {
 
         var page = 0;
         var perPage = 100;
@@ -75,9 +76,7 @@ public class BookControllerTest {
         this.mockMvc.perform(get("/book")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(Utils.convertToSting(bookList)))
+                .andExpect(content().string(Utils.convertToSting(pageBookResponse)))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
-
-
 }

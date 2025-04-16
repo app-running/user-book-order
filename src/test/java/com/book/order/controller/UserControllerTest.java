@@ -21,7 +21,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(MockitoExtension.class)
 public class UserControllerTest {
 
-
     private MockMvc mockMvc;
     @Mock
     private UsersService usersService;
@@ -39,7 +38,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void testSuccessfulCreateUser() throws Exception {
+    void test_successful_create_user() throws Exception {
 
         when(usersService.addUser(USER_REQUEST)).thenReturn(USER_RESPONSE);
         this.mockMvc.perform(post("/user/create")
