@@ -13,12 +13,12 @@ All REST API :
 
 | Service                                         | Method | Request                                             |
 | :---                                            | :---   | :---                                                |
-| User API                                        | :---   | :---                                                |
+| **User API**                                    | :---   | :---                                                |
 | Create User                                     | POST   |  "/user/create"                                     |
-| Book API                                        | :---   | :---                                                |
+| **Book API**                                    | :---   | :---                                                |
 | Get All Book                                    | POST   |  "/book"                                            |
 | Create Book                                     | GET    |  "/book/addBook"                                    |
-| UserBookOrder API                               | :---   | :---                                                |
+| **UserBookOrder API**                           | :---   | :---                                                |
 | Borrow book by User                             | POST   | "/borrow-book"                                      |
 | Return book by User                             | POST   | "/return-book"                                      |
 | Get all borrow books by User Id with pagination | GET    | "/list/borrow-book?user={userId}&page=1&perPage=10" |
